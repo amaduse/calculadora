@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 300px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        input[type="button"] {
+            width: 100%;
+            margin-bottom: 10px;
+            padding: 10px;
+            font-size: 1.2em;
+        }
+
+        #result {
+            width: 95%;
+            height: 40px;
+            margin-bottom: 10px;
+            padding: 8px;
+            font-size: 1.2em;
+            text-align: right;
+        }
+    </style>
+</head>
+
+<body bgcolor="#000000">
+<table cellpadding="2" cellspacing="2" width="400px" bgcolor="#404040">
+    <tr>
+    <td colspan="4"><input type="text" width="390px" id="result" readonly></td>
+    </tr><tr>
+    <td><input type="button" value="7" onclick="appendNumber(7)"></td>
+    <td><input type="button" value="8" onclick="appendNumber(8)"></td>
+    <td><input type="button" value="9" onclick="appendNumber(9)"></td>
+    <td><input type="button" value="/" onclick="appendOperator('/')"></td>
+    </tr><tr>    
+    <td><input type="button" value="4" onclick="appendNumber(4)"></td>
+    <td><input type="button" value="5" onclick="appendNumber(5)"></td>
+    <td><input type="button" value="6" onclick="appendNumber(6)"></td>
+    <td><input type="button" value="*" onclick="appendOperator('*')"></td>
+</tr><tr>
+    <td><input type="button" value="1" onclick="appendNumber(1)"></td>
+    <td><input type="button" value="2" onclick="appendNumber(2)"></td>
+    <td><input type="button" value="3" onclick="appendNumber(3)"></td>
+    <td><input type="button" value="-" onclick="appendOperator('-')"></td>
+    </tr><tr>
+    <td><input type="button" value="0" onclick="appendNumber(0)"></td>
+    <td><input type="button" value="." onclick="appendDecimal()"></td>
+    <td><input type="button" value="=" onclick="calculateResult()"></td>
+    <td><input type="button" value="+" onclick="appendOperator('+')"></td>
+    </tr><tr>
+    <td colspan="4"><input type="button" value="C" onclick="clearResult()"></td>
+    </tr></table>
+    <script>
+        let result = document.getElementById('result');
+        let currentNumber = '';
+        let previousNumber = '';
+        let operator = null;
+
+        function appendNumber(num) {
+            currentNumber += num;
+            result.value = currentNumber;
+        }
+
+        function appendOperator(op) {
+            if (currentNumber === '') return;
+            if (previousNumber!== '') calculateResult();
+            operator = op;
+            previousNumber = currentNumber;
+            currentNumber = '';
+        }
+
+        function appendDecimal() {
+            if (!currentNumber.includes('.')) {
+                currentNumber += '.';
+                result.value = currentNumber;
+            }
+        }
+
+        function calculateResult() {
+            let calculation;
+            const prev = parseFloat(previousNumber);
+            const current = parseFloat(currentNumber);
+            if (isNaN(prev) || isNaN(current)) return;
+            switch (operator) {
+                case '+':
+                    calculation = prev + current;
+                    break;
+                case '-':
+                    calculation = prev - current;
+                    break;
+                case '*':
+                    calculation = prev * current;
+                    break;
+                case '/':
+                    if (current === 0) {
+                        alert('Cannot divide by zero');
+                        return;
+                    }
+                    calculation = prev / current;
+                    break;
+                default:
+                    return;
+            }
+            result.value = calculation;
+            currentNumber = calculation.toString();
+            previousNumber = '';
+            operator = null;
+        }
+
+        function clearResult() {
+            currentNumber = '';
+            previousNumber = '';
+            operator = null;
+            result.value = '';
+        }
+    </script>
+</body>
+
+</html>
